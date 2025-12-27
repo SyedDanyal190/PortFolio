@@ -1,22 +1,48 @@
-"use client"
+// "use client"
 
-import type React from "react"
-import { createContext, useContext, useEffect, useState } from "react"
+// import type React from "react"
+// import { createContext, useContext, useEffect, useState } from "react"
 
-interface ThemeContextType {
-  theme: "light" | "dark"
-  toggleTheme: () => void
-}
+// interface ThemeContextType {
+//   theme: "light" | "dark"
+//   toggleTheme: () => void
+// }
 
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
+// const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
+
+
+
+// // export function ThemeProvider({ children }: { children: React.ReactNode }) {
+// //   //Light
+// //   // const [theme, setTheme] = useState<"light" | "dark">("light")  // default light
+// //   // Dark
+// //   const [theme, setTheme] = useState<"light" | "dark">("dark") // default dark
+// //   const [mounted, setMounted] = useState(false)
+
+// //   useEffect(() => {
+// //     const savedTheme = localStorage.getItem("portfolio-theme") as "light" | "dark" | null
+// //     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
+// //     const initialTheme = savedTheme || (prefersDark ? "dark" : "light")
+
+// //     setTheme(initialTheme)
+// //     document.documentElement.classList.toggle("dark", initialTheme === "dark")
+// //     setMounted(true)
+// //   }, [])
+
+// //   const toggleTheme = () => {
+// //     const newTheme = theme === "light" ? "dark" : "light"
+// //     setTheme(newTheme)
+// //     localStorage.setItem("portfolio-theme", newTheme)
+// //     document.documentElement.classList.toggle("dark", newTheme === "dark")
+// //   }
+
+// //   return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>
+// // }
 
 
 
 // export function ThemeProvider({ children }: { children: React.ReactNode }) {
-//   //Light
-//   // const [theme, setTheme] = useState<"light" | "dark">("light")  // default light
-//   // Dark
-//   const [theme, setTheme] = useState<"light" | "dark">("dark") // default dark
+//   const [theme, setTheme] = useState<"light" | "dark">("dark") // initial state doesn't matter
 //   const [mounted, setMounted] = useState(false)
 
 //   useEffect(() => {
@@ -36,19 +62,68 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 //     document.documentElement.classList.toggle("dark", newTheme === "dark")
 //   }
 
+//   // Only render children after theme is set
+//   if (!mounted) return null
+
 //   return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>
 // }
 
 
 
+
+// export function useTheme() {
+//   const context = useContext(ThemeContext)
+//   if (!context) {
+//     throw new Error("useTheme must be used within ThemeProvider")
+//   }
+//   return context
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"use client"
+
+import type React from "react"
+import { createContext, useContext, useEffect, useState } from "react"
+
+interface ThemeContextType {
+  theme: "light" | "dark"
+  toggleTheme: () => void
+}
+
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<"light" | "dark">("dark") // initial state doesn't matter
+  const [theme, setTheme] = useState<"light" | "dark">("dark")
   const [mounted, setMounted] = useState(false)
 
+  // Apply theme immediately on client to avoid flash
   useEffect(() => {
-    const savedTheme = localStorage.getItem("portfolio-theme") as "light" | "dark" | null
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
-    const initialTheme = savedTheme || (prefersDark ? "dark" : "light")
+    let initialTheme: "light" | "dark" = "dark" // default dark
+    try {
+      const savedTheme = localStorage.getItem("portfolio-theme") as "light" | "dark" | null
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
+      initialTheme = savedTheme || (prefersDark ? "dark" : "light")
+    } catch (e) {
+      initialTheme = "dark"
+    }
 
     setTheme(initialTheme)
     document.documentElement.classList.toggle("dark", initialTheme === "dark")
@@ -62,14 +137,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     document.documentElement.classList.toggle("dark", newTheme === "dark")
   }
 
-  // Only render children after theme is set
+  // Render children only after theme is applied
   if (!mounted) return null
 
   return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>
 }
-
-
-
 
 export function useTheme() {
   const context = useContext(ThemeContext)
@@ -78,23 +150,3 @@ export function useTheme() {
   }
   return context
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
