@@ -13,12 +13,12 @@ export default function Footer() {
             <ul className="space-y-1 text-sm text-muted-foreground">
               <li>
                 <a href="tel:+923041901901" className="hover:text-primary transition-colors">
-                    +923041901901
+                     +923215290557
                 </a>
               </li>
               <li>
                 <a href="mailto:daniyalsyed487@gmail.com" className="hover:text-primary transition-colors">
-                 danyalweb509@gmail.com
+                  daniyalsyed487@gmail.com
                 </a>
               </li>
               <li className="text-xs pt-1">Available for freelance & full-time roles</li>
